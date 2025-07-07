@@ -23,36 +23,29 @@ public class ProducerApplication {
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class.getName());
         props.put("schema.registry.url", "http://localhost:8081");
 
+        props.put(ProducerConfig.BATCH_SIZE_CONFIG, 32768);  
+        props.put(ProducerConfig.LINGER_MS_CONFIG, 10);   
+
         String topic = "users-avro";
 
-        User user1 = User.newBuilder()
-                .setId(3)
-                .setName("Omar22")
-                .setEmail("Omar22@gmail.com")
-                .build();
-        
-        User user2 = User.newBuilder()
-                .setId(4)
-                .setName("Mahmoud22")
-                .setEmail("Mahmoud22@gmail.com")
-                .build();
-
         try (KafkaProducer<String, User> producer = new KafkaProducer<>(props)) {
-            sendUser(producer, topic, user1);
-            sendUser(producer, topic, user2);
-            producer.flush();
-            logger.info("Producer closed.");
+            for (int i = 1; i <= 100000; i++) {
+                User user = User.newBuilder()
+                    .setId(i)
+                    .setName("User" + i)
+                    .setEmail("user" + i + "@gmail.com")
+                    .build();
+                producer.send(new ProducerRecord<>(topic, user), (metadata, exception) -> {
+                    if (exception != null) {
+                        logger.error("Error producing message for user {}: {}", user.getName(), exception.getMessage());
+                    } else {
+                        logger.info("Produced user {} to partition {} at offset {}", user.getName(), metadata.partition(), metadata.offset());
+                    }
+                });
+            }
+            logger.info("All messages sent. Producer closed.");
         } catch (Exception e) {
             logger.error("Producer failed: {}", e.getMessage());
-        }
-    }
-
-    private static void sendUser(KafkaProducer<String, User> producer, String topic, User user) {
-        try {
-            producer.send(new ProducerRecord<>(topic, user));
-            logger.info("Produced: {}", user);
-        } catch (Exception e) {
-            logger.error("Error producing message: {}", e.getMessage());
         }
     }
 }

@@ -13,7 +13,6 @@ A complete Apache Kafka messaging system with Avro serialization and Schema Regi
                                 ▼
                        ┌─────────────────┐
                        │ Schema Registry │
-                       │   (Confluent)   │
                        └─────────────────┘
                                 │
                                 ▼

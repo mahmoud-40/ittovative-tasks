@@ -29,16 +29,37 @@ public class ConsumerApplication {
             props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
             props.put("schema.registry.url", "http://localhost:8081");
             props.put("specific.avro.reader", "true");
-
+            
+            props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 100);      
+            props.put(ConsumerConfig.FETCH_MIN_BYTES_CONFIG, 32768);     
+            props.put(ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG, 10);   
+            
             KafkaConsumer<String, User> consumer = new KafkaConsumer<>(props);
             consumer.subscribe(Collections.singletonList("users-avro"));
-            System.out.println("Consuming messages. Press Ctrl+C to exit.");
+            System.out.println("Consuming messages in batches. Press Ctrl+C to exit.");
+            
+            long totalProcessed = 0;
+            long startTime = System.currentTimeMillis();
+            
             while (true) {
-                ConsumerRecords<String, User> records = consumer.poll(Duration.ofMillis(500));
-                for (ConsumerRecord<String, User> record : records) {
-                    User user = record.value();
-                    System.out.printf("Received User: ID=%d, Name=%s, Email=%s%n", 
-                        user.getId(), user.getName(), user.getEmail());
+                ConsumerRecords<String, User> records = consumer.poll(Duration.ofMillis(1000));
+                
+                if (!records.isEmpty()) {
+                    System.out.printf("Processing batch of %d records...%n", records.count());
+                    
+                    for (ConsumerRecord<String, User> record : records) {
+                        User user = record.value();
+                        System.out.printf("  User ID=%d, Name=%s, Email=%s (partition=%d, offset=%d)%n", 
+            user.getId(), user.getName(), user.getEmail(), record.partition(), record.offset());
+                        totalProcessed++;
+                    }
+                    
+                    long elapsedTime = System.currentTimeMillis() - startTime; 
+                    double throughput = totalProcessed / (elapsedTime / 1000.0);
+                    System.out.printf("Batch processed! Total: %d records, Throughput: %.2f records/sec%n", 
+                        totalProcessed, throughput);
+                    
+                    consumer.commitSync();
                 }
             }
         } else {
