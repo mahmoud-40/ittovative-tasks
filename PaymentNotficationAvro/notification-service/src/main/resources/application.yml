@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: notification-service
+        
+  kafka:
+    bootstrap-servers: ${KAFKA_BROKER:localhost:9092}
+    consumer:
+      group-id: notification-consumer-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      enable-auto-commit: false
+      properties:
+        schema.registry.url: ${SCHEMA_REGISTRY_URL:http://localhost:8081}
+        specific.avro.reader: true
+    listener:
+      ack-mode: manual_immediate
+
+server:
+  port: ${SERVER_PORT:8081}
+
+logging:
+  level:
+    com.example.notificationservice: DEBUG
+    org.springframework.kafka: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+notification:
+  topic:
+    name: notification-events 

@@ -1,0 +1,149 @@
+{
+  "namespace": "com.example.shared.avro",
+  "type": "record",
+  "name": "NotificationMessage",
+  "fields": [
+    { "name": "eventId", "type": "string" },
+    { "name": "timestamp", "type": "string" },
+    { "name": "eventSource", "type": "string" },
+    { "name": "priority", "type": "string" },
+    { "name": "category", "type": "string" },
+    {
+      "name": "scheduledSendTime",
+      "type": ["null", "string"],
+      "default": null
+    },
+    { "name": "clientId", "type": ["null", "string"], "default": null },
+    { "name": "channels", "type": { "type": "array", "items": "string" } },
+    { "name": "href", "type": "string" },
+    { "name": "language", "type": "string" },
+    { "name": "useCommonContent", "type": "boolean" },
+    { "name": "content", "type": "string" },
+    { "name": "messageType", "type": "string" },
+    {
+      "name": "receiver",
+      "type": {
+        "type": "array",
+        "items": {
+          "name": "Receiver",
+          "type": "record",
+          "fields": [
+            {
+              "name": "emailReceiver",
+              "type": [
+                "null",
+                {
+                  "type": "record",
+                  "name": "EmailReceiver",
+                  "fields": [
+                    {
+                      "name": "to",
+                      "type": { "type": "array", "items": "string" }
+                    },
+                    {
+                      "name": "cc",
+                      "type": { "type": "array", "items": "string" }
+                    },
+                    {
+                      "name": "bcc",
+                      "type": { "type": "array", "items": "string" }
+                    }
+                  ]
+                }
+              ],
+              "default": null
+            },
+            {
+              "name": "smsReceiver",
+              "type": [
+                "null",
+                {
+                  "type": "record",
+                  "name": "SmsReceiver",
+                  "fields": [{ "name": "phoneNumber", "type": "string" }]
+                }
+              ],
+              "default": null
+            },
+            {
+              "name": "whatsappReceiver",
+              "type": [
+                "null",
+                {
+                  "type": "record",
+                  "name": "WhatsappReceiver",
+                  "fields": [{ "name": "phoneNumber", "type": "string" }]
+                }
+              ],
+              "default": null
+            },
+            {
+              "name": "pushReceiver",
+              "type": [
+                "null",
+                {
+                  "type": "record",
+                  "name": "PushReceiver",
+                  "fields": [{ "name": "appUserId", "type": "string" }]
+                }
+              ],
+              "default": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "sender",
+      "type": {
+        "type": "record",
+        "name": "Sender",
+        "fields": []
+      }
+    },
+    {
+      "name": "attachment",
+      "type": {
+        "type": "array",
+        "items": {
+          "type": "record",
+          "name": "Attachment",
+          "fields": [
+            { "name": "url", "type": "string" },
+            { "name": "name", "type": "string" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "notificationChannels",
+      "type": {
+        "type": "array",
+        "items": {
+          "type": "record",
+          "name": "NotificationChannel",
+          "fields": [
+            { "name": "channel", "type": "string" },
+            { "name": "sender", "type": ["null", "string"], "default": null },
+            {
+              "name": "overridingBody",
+              "type": ["null", "string"],
+              "default": null
+            },
+            { "name": "body", "type": ["null", "string"], "default": null },
+            {
+              "name": "properties",
+              "type": { "type": "map", "values": "string" },
+              "default": {}
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "externalFields",
+      "type": ["null", { "type": "map", "values": "string" }],
+      "default": null
+    }
+  ]
+}

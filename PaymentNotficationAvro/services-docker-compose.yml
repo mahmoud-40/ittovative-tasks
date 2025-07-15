@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  payment-service:
+    build:
+      context: ./payment-service
+    container_name: payment-service
+    ports:
+      - "8080:8080"
+    environment:
+      KAFKA_BROKER: kafka:29092
+      SCHEMA_REGISTRY_URL: http://schema-registry:8081
+    networks:
+      - shared-network
+
+  notification-service:
+    build:
+      context: ./notification-service
+    container_name: notification-service
+    ports:
+      - "8082:8081"
+    environment:
+      KAFKA_BROKER: kafka:29092
+      SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      SERVER_PORT: 8081
+    networks:
+      - shared-network
+
+networks:
+  shared-network:
+    external: true
