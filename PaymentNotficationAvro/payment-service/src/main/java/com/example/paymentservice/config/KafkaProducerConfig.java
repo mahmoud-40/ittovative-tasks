@@ -12,6 +12,8 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 
+import com.example.shared.avro.NotificationMessage;
+
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 
 @Configuration
@@ -24,7 +26,7 @@ public class KafkaProducerConfig {
     private String schemaRegistryUrl;
 
     @Bean
-    public ProducerFactory<String, Object> producerFactory() {
+    public ProducerFactory<String, NotificationMessage> producerFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -41,7 +43,7 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, Object> kafkaTemplate() {
+    public KafkaTemplate<String, NotificationMessage> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 } 

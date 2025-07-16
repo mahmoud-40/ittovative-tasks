@@ -10,10 +10,9 @@
     { "name": "category", "type": "string" },
     {
       "name": "scheduledSendTime",
-      "type": ["null", "string"],
-      "default": null
+      "type": ["null", "string"]
     },
-    { "name": "clientId", "type": ["null", "string"], "default": null },
+    { "name": "clientId", "type": ["null", "string"] },
     { "name": "channels", "type": { "type": "array", "items": "string" } },
     { "name": "href", "type": "string" },
     { "name": "language", "type": "string" },
@@ -50,8 +49,7 @@
                     }
                   ]
                 }
-              ],
-              "default": null
+              ]
             },
             {
               "name": "smsReceiver",
@@ -62,8 +60,7 @@
                   "name": "SmsReceiver",
                   "fields": [{ "name": "phoneNumber", "type": "string" }]
                 }
-              ],
-              "default": null
+              ]
             },
             {
               "name": "whatsappReceiver",
@@ -74,8 +71,7 @@
                   "name": "WhatsappReceiver",
                   "fields": [{ "name": "phoneNumber", "type": "string" }]
                 }
-              ],
-              "default": null
+              ]
             },
             {
               "name": "pushReceiver",
@@ -86,8 +82,7 @@
                   "name": "PushReceiver",
                   "fields": [{ "name": "appUserId", "type": "string" }]
                 }
-              ],
-              "default": null
+              ]
             }
           ]
         }
@@ -124,17 +119,15 @@
           "name": "NotificationChannel",
           "fields": [
             { "name": "channel", "type": "string" },
-            { "name": "sender", "type": ["null", "string"], "default": null },
+            { "name": "sender", "type": ["null", "string"] },
             {
               "name": "overridingBody",
-              "type": ["null", "string"],
-              "default": null
+              "type": ["null", "string"]
             },
-            { "name": "body", "type": ["null", "string"], "default": null },
+            { "name": "body", "type": ["null", "string"] },
             {
               "name": "properties",
-              "type": { "type": "map", "values": "string" },
-              "default": {}
+              "type": { "type": "map", "values": "string" }
             }
           ]
         }

@@ -14,6 +14,8 @@ import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.ContainerProperties;
 
+import com.example.shared.avro.NotificationMessage;
+
 import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 
 @Configuration
@@ -30,7 +32,7 @@ public class KafkaConsumerConfig {
     private String schemaRegistryUrl;
 
     @Bean
-    public ConsumerFactory<String, Object> consumerFactory() {
+    public ConsumerFactory<String, NotificationMessage> consumerFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         configProps.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
@@ -45,8 +47,8 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, Object> factory = 
+    public ConcurrentKafkaListenerContainerFactory<String, NotificationMessage> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, NotificationMessage> factory = 
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);

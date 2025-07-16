@@ -27,12 +27,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class NotificationProducerService {
 
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final KafkaTemplate<String, NotificationMessage> kafkaTemplate;
 
     @Value("${notification.topic.name}")
     private String notificationTopic;
 
-    public CompletableFuture<SendResult<String, Object>> sendPaymentNotification(PaymentEvent paymentEvent) {
+    public CompletableFuture<SendResult<String, NotificationMessage>> sendPaymentNotification(PaymentEvent paymentEvent) {
         try {
             NotificationMessage message = buildNotificationMessage(paymentEvent);
             log.info("Notification message: {}", message);
@@ -50,7 +50,7 @@ public class NotificationProducerService {
         }
     }
 
-    public CompletableFuture<SendResult<String, Object>> sendRawNotification(NotificationMessage message) {
+    public CompletableFuture<SendResult<String, NotificationMessage>> sendRawNotification(NotificationMessage message) {
         try {
             log.info("Sending raw NotificationMessage: {}", message);
             return kafkaTemplate.send(notificationTopic, message.getEventId(), message)
